@@ -35,8 +35,9 @@ if (!defined('DB_HOST')) {
 
 // Application URLs
 if (!defined('BASE_URL')) {
-    define('BASE_URL', 'http://localhost/ticket-system/public');
-    define('SITE_URL', 'http://localhost/ticket-system');
+    // define('BASE_URL', 'http://localhost/ticket-system/public');
+    define('BASE_URL', 'http://localhost:8000/public');
+    define('SITE_URL', 'http://localhost:8000');
 }
 
 // File Upload Settings

@@ -33,6 +33,17 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = generate_csrf_token();
 }
 
+function generate_csrf_token() {
+    // Generate a random token
+    return bin2hex(random_bytes(32));
+}
+
+function e($value)
+{
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+}
+
+
 // Simple router
 $request = $_SERVER['REQUEST_URI'];
 $base_path = '/ticket-system/public/';
