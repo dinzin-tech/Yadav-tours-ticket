@@ -36,6 +36,10 @@ class BrandingSettings {
         }
         return self::$instance;
     }
+
+    public static function getAllSettings() {
+        return self::getInstance()->settings;
+    }
     
     private function loadSettings() {
         // Load from cache first
@@ -130,7 +134,7 @@ class BrandingSettings {
         if (strpos($logo, 'http') === 0) {
             return $logo;
         }
-        return 'http://localhost/ticket-system/public' . $logo;
+        return 'http://localhost:8080' . $logo;
     }
     
     public function getFaviconUrl() {

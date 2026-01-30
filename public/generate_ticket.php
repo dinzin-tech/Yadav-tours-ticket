@@ -14,6 +14,9 @@ if (empty($_GET['id'])) {
 
 $ticket_id = $_GET['id'];
 
+// load airlines data
+$airlines = require_once __DIR__ . '/../app/config/airlines.php';
+
 /* -------------------- PATHS -------------------- */
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
@@ -60,6 +63,16 @@ if (file_exists(APP_PATH . '/classes/BrandingSettings.php')) {
     }
 }
 
+// $brand_settings = $branding ? $branding->loadSettings() : [];
+
+// $brand = new BrandingSettings($db);
+
+$agency = BrandingSettings::getAllSettings() ?? $agency;
+
+// var_dump($agency);
+// exit();
+
+
 /* -------------------- HELPER -------------------- */
 function e($v) {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
@@ -85,124 +98,124 @@ $type_label = ucfirst($ticket_type);
 <title><?= e($type_label) ?> Ticket - <?= e($ticket['ticket_id']) ?></title>
 
 <style>
-@media print {
-    @page { size: A4; margin: 15mm; }
-    body { margin:0; -webkit-print-color-adjust:exact; }
-    .no-print { display:none; }
-}
+    @media print {
+        @page { size: A4; margin: 15mm; }
+        body { margin:0; -webkit-print-color-adjust:exact; }
+        .no-print { display:none; }
+    }
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    color: #222;
-}
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #222;
+    }
 
-.container {
-    max-width: 820px;
-    margin: auto;
-}
+    .container {
+        max-width: 820px;
+        margin: auto;
+    }
 
-/* FLIGHT TICKET SPECIFIC STYLES */
-.flight-header {
-    margin-bottom: 20px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-}
-.flight-header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-.agency-logo-img {
-    max-height: 50px;
-    margin-bottom: 5px;
-}
-.flight-header-right {
-    text-align: right;
-}
+    /* FLIGHT TICKET SPECIFIC STYLES */
+    .flight-header {
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+    }
+    .flight-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    .agency-logo-img {
+        max-height: 50px;
+        margin-bottom: 5px;
+    }
+    .flight-header-right {
+        text-align: right;
+    }
 
-.flight-info-box {
-    background: #fdfdfd;
-    border: 1px solid #000;
-    margin: 15px 0;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-}
+    .flight-info-box {
+        background: #fdfdfd;
+        border: 1px solid #000;
+        margin: 15px 0;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
 
-.section-title {
-    font-weight: bold;
-    margin: 18px 0 6px;
-    border-bottom: 1px solid #000;
-    padding-bottom: 4px;
-}
+    .section-title {
+        font-weight: bold;
+        margin: 18px 0 6px;
+        border-bottom: 1px solid #000;
+        padding-bottom: 4px;
+    }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 6px;
-}
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+    }
 
-.table th, .table td {
-    border: 1px solid #000;
-    padding: 6px;
-    font-size: 11px;
-    text-align: left;
-}
+    .table th, .table td {
+        border: 1px solid #000;
+        padding: 6px;
+        font-size: 11px;
+        text-align: left;
+    }
 
-.table th {
-    background: #f2f2f2;
-    font-weight: bold;
-}
+    .table th {
+        background: #f2f2f2;
+        font-weight: bold;
+    }
 
-.fare-box {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
+    .fare-box {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
 
-.fare-box td, .fare-box th {
-    border: 1px solid #000;
-    padding: 5px;
-}
+    .fare-box td, .fare-box th {
+        border: 1px solid #000;
+        padding: 5px;
+    }
 
-.fare-row {
-    display: flex;
-    justify-content: space-between;
-}
+    .fare-row {
+        display: flex;
+        justify-content: space-between;
+    }
 
-.total {
-    font-weight: bold;
-}
+    .total {
+        font-weight: bold;
+    }
 
-.terms {
-    font-size: 10px;
-    line-height: 1.4;
-    margin-top: 15px;
-}
+    .terms {
+        font-size: 10px;
+        line-height: 1.4;
+        margin-top: 15px;
+    }
 
-.footer {
-    text-align: center;
-    font-size: 10px;
-    margin-top: 15px;
-    border-top: 1px dashed #999;
-    padding-top: 6px;
-}
+    .footer {
+        text-align: center;
+        font-size: 10px;
+        margin-top: 15px;
+        border-top: 1px dashed #999;
+        padding-top: 6px;
+    }
 
-.print-btn {
-    margin: 15px 0;
-    text-align: center;
-}
+    .print-btn {
+        margin: 15px 0;
+        text-align: center;
+    }
 
-/* SHARED STYLES FOR OTHER TYPES */
-.header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
-}
-.header-left h2 { margin: 0; font-size: 18px; }
-.header-right { text-align: right; font-size: 11px; }
+    /* SHARED STYLES FOR OTHER TYPES */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+    }
+    .header-left h2 { margin: 0; font-size: 18px; }
+    .header-right { text-align: right; font-size: 11px; }
 
 </style>
 </head>
@@ -223,7 +236,24 @@ body {
     
     // Attempt to determine Issuer and Contact
     $issued_by_name = $ticket_data['airline']; 
-    if (empty($issued_by_name)) $issued_by_name = $agency['agency_name']; // Fallback
+
+    // Check if airline exists in our data and append image if available
+    $airline_img = '';
+
+    if(isset($airlines[$issued_by_name])) {
+        $airline_info = $airlines[$issued_by_name];
+        if (!empty($airline_info->logo)) {
+            $airline_img = $airline_info->logo;
+            
+        }
+        else {
+            $issued_by_name = $airline_info->name;
+        }
+        
+    }
+
+
+    if (empty($issued_by_name)) $issued_by_name = $agency['brand_name']; // Fallback
 
     // Contact Logic: User wants Airline Contact if exists, else Agency
     // Since we don't store Airline Contact in DB, we'll check if it was somehow provided or just default to Agency
@@ -231,19 +261,20 @@ body {
     // We will show Issued By: Airline, and Contact: Agency (since we don't have airline contact).
     
     $contact_html = '
-        ' . e($agency['agency_address']) . '<br>
-        <strong>Email:</strong> ' . e($agency['agency_email']) . '<br>
-        <strong>Mobile:</strong> ' . e($agency['agency_phone']);
+        ' . e($agency['company_address']) . '<br>
+        <strong>Email:</strong> ' . e($agency['company_email']) . '<br>
+        <strong>Mobile:</strong> ' . e($agency['company_phone']);
 
 ?>
 
     <div class="flight-header">
         <div class="flight-header-top">
             <div class="flight-header-left">
-                <?php if (!empty($agency['agency_logo'])): ?>
-                    <img src="<?= e($agency['agency_logo']) ?>" class="agency-logo-img" alt="Agency Logo"><br>
+                <?php if (!empty($agency['logo_path'])): ?>
+                    <img src="<?= e($agency['logo_path']) ?>" class="agency-logo-img" alt="Agency Logo"><br>
+                    <h2 style="color:<?= $agency['primary_color'] ?>; margin:0;"><?= e(strtoupper($agency['brand_name'])) ?></h2>
                 <?php else: ?>
-                    <h2 style="color:orange; margin:0;"><?= e(strtoupper($agency['agency_name'])) ?></h2>
+                    <h2 style="color:{$agency['primary_color']}; margin:0;"><?= e(strtoupper($agency['brand_name'])) ?></h2>
                 <?php endif; ?>
                 <div style="font-size:11px; line-height:1.4;">
                     <?= $contact_html ?>
@@ -251,7 +282,7 @@ body {
             </div>
             <div class="flight-header-right">
                 <div style="font-size:12px; margin-bottom:5px;"><strong>Your e-receipt</strong></div>
-                <div>Booked On: <?= date('Y-m-d H:i:s.v', strtotime($ticket['generated_at'])) ?></div>
+                <!-- <div>Booked On: <?= date('Y-m-d H:i:s.v', strtotime($ticket['generated_at'])) ?></div> -->
             </div>
         </div>
     </div>
@@ -259,10 +290,12 @@ body {
     <!-- Booking Info Row -->
     <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <strong>Issued by :</strong><br>
+            <strong>Issued by :</strong>
+            <img src="<?= e($airline_img) ?>" style="height:40px; vertical-align:middle;" alt="<?= e($issued_by_name) ?>"> &nbsp;
+            <br/>
             <?= e($issued_by_name) ?>
             <div style="margin-top:5px; font-size:10px;">
-                Contact: <?= e($agency['agency_name']) ?> Support
+                Contact: <?= e($agency['brand_name']) ?> Support
             </div>
         </div>
         <div style="text-align:center;">
@@ -344,6 +377,7 @@ body {
                     <tr>
                         <td style="border:1px solid #000;">Tax & Others</td>
                         <td style="border:1px solid #000; text-align:right;">INR <?= number_format($ticket_data['tax_amount'] ?? 0, 2) ?></td>
+                        <?php //var_dump($ticket_data);die(); ?>
                     </tr>
                     <tr><td style="border:1px solid #000;">Baggage Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
                     <tr><td style="border:1px solid #000;">Meals Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
@@ -357,7 +391,7 @@ body {
                     <tr><td style="border:1px solid #000;">Reschedule Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
                     <tr><td style="border:1px solid #000;">Cancellation Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
                     <tr><td style="border:1px solid #000;">Gateway Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
-                    <tr><td style="border:1px solid #000;">Other Charge</td><td style="border:1px solid #000; text-align:right;">-</td></tr>
+                    <tr><td style="border:1px solid #000;">Other Charge</td><td style="border:1px solid #000; text-align:right;"><?= number_format($ticket_data['service_charge'], 2) ?? '-' ?></td></tr>
                     <tr><td style="border:1px solid #000; height:24px;"></td><td style="border:1px solid #000;"></td></tr>
                     <tr>
                         <td style="border:1px solid #000; font-weight:bold;">Total Amount</td>
@@ -388,14 +422,14 @@ body {
 
     <div class="header">
         <div class="header-left">
-            <?php if (!empty($agency['agency_logo'])): ?>
-                <img src="<?= e($agency['agency_logo']) ?>" class="agency-logo-img" alt="Agency Logo" style="max-height:50px; margin-bottom:5px;"><br>
+            <?php if (!empty($agency['logo_path'])): ?>
+                <img src="<?= e($agency['logo_path']) ?>" class="agency-logo-img" alt="Agency Logo" style="max-height:50px; margin-bottom:5px;"><br>
             <?php endif; ?>
-            <h2><?= e($agency['agency_name']) ?></h2>
+            <h2><?= e($agency['brand_name']) ?></h2>
             <small>
-                <?= e($agency['agency_address']) ?><br>
-                Mobile: <?= e($agency['agency_phone']) ?><br>
-                Email: <?= e($agency['agency_email']) ?>
+                <?= e($agency['company_address']) ?><br>
+                Mobile: <?= e($agency['company_phone']) ?><br>
+                Email: <?= e($agency['company_email']) ?>
             </small>
         </div>
         <div class="header-right">

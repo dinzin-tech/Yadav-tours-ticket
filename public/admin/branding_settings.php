@@ -63,26 +63,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Helper function for file upload
 function handleFileUpload($db, $settingKey, $file) {
-    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ticket-system/public/assets/uploads/';
+    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/uploads/';
+
+    // var_dump($uploadDir);
+    // die();
     
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
     }
     
     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/x-icon'];
-    $maxSize = 2 * 1024 * 1024; // 2MB
+    $maxSize = 5 * 1024 * 1024; // 2MB
     
     if (!in_array($file['type'], $allowedTypes)) {
         throw new Exception('Invalid file type. Allowed: JPG, PNG, GIF, SVG, ICO');
     }
     
     if ($file['size'] > $maxSize) {
-        throw new Exception('File too large. Max size: 2MB');
+        throw new Exception('File too large. Max size: 5MB');
     }
     
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = $settingKey . '_' . time() . '.' . $extension;
     $filepath = $uploadDir . $filename;
+    // var_dump($filepath);
+    // die();
     
     if (move_uploaded_file($file['tmp_name'], $filepath)) {
         $relativePath = '/assets/uploads/' . $filename;

@@ -8,6 +8,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     exit();
 }
 
+$airlines = require_once __DIR__ . '/../app/config/airlines.php';
+
+$airline_data = [];
+
+foreach ($airlines as $code => $airline) {
+    $airline_data[] = [
+        'id' => $code,
+        'text' => $airline->name
+    ];
+}
+
 // Define constants
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
@@ -169,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         body {
             background-color: #f5f7fb;
@@ -410,9 +422,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Airline Name *</label>
-                        <input type="text" class="form-control" name="airline" 
+                        <!--<input type="text" class="form-control" name="airline" 
                             value="<?= htmlspecialchars($form_data['airline'] ?? '') ?>" 
-                            placeholder="e.g., IndiGo, Air India, SpiceJet" required>
+                            placeholder="e.g., IndiGo, Air India, SpiceJet" required> -->
+                        <select name="airline" id="airline_select" required class="form-select">
+
+                        </select>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Class *</label>
@@ -806,7 +821,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // Initialize datepickers
         flatpickr("input[type='datetime-local']", {
@@ -873,6 +890,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Initial calculation
         calculateTotal();
+    </script>
+    <script>
+        $(document).ready(function() {
+            var data = <?= json_encode($airline_data) ?>;
+            // Initialize Select2 for airline selection if needed
+            $('select[name="airline"]').select2({
+                data: data,
+                placeholder: 'Select Airline',
+            });
+        });
     </script>
 </body>
 </html>
