@@ -134,6 +134,7 @@ class BrandingSettings {
         if (strpos($logo, 'http') === 0) {
             return $logo;
         }
+        // return 'http://localhost/ticket-system/public' . $logo;
         return 'http://localhost:8080' . $logo;
     }
     
